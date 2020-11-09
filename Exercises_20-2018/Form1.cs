@@ -25,34 +25,43 @@ namespace Exercises_20_2018
             SqlConnection sqlConnection = new SqlConnection();
             sqlConnection.ConnectionString = connectionString;
 
-            List<ExerciseResult> students = new List<ExerciseResult>(); 
+            try {
+                
+                List<ExerciseResult> students = new List<ExerciseResult>(); 
 
-            sqlConnection.Open();
+                sqlConnection.Open();
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = sqlConnection;
-            sqlCommand.CommandText = "SELECT * FROM ExerciseResults";
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.Connection = sqlConnection;
+                sqlCommand.CommandText = "SELECT * FROM ExerciseResults";
 
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
 
-            while (sqlDataReader.Read())
-            {
-                ExerciseResult student = new ExerciseResult();
-                student.Id = sqlDataReader.GetInt32(0);
-                student.StudentName = sqlDataReader.GetString(1);
-                student.StudentIndex = sqlDataReader.GetString(2);
-                student.Points = sqlDataReader.GetInt32(3);
-                students.Add(student);
+                while (sqlDataReader.Read())
+                {
+                    ExerciseResult student = new ExerciseResult();
+                    student.Id = sqlDataReader.GetInt32(0);
+                    student.StudentName = sqlDataReader.GetString(1);
+                    student.StudentIndex = sqlDataReader.GetString(2);
+                    student.Points = sqlDataReader.GetInt32(3);
+                    students.Add(student);
+                }
+
+                foreach (ExerciseResult s in students)
+                {
+                    listBoxExerciseResults.Items.Add(s.Id + ". " + s.StudentName + "  " + s.StudentIndex + "  =  " +
+                        s.Points);
+                }
             }
-
-            foreach (ExerciseResult s in students)
+            catch
             {
-                listBoxExerciseResults.Items.Add(s.Id + ". " + s.StudentName + "  " + s.StudentIndex + "  =  " +
-                    s.Points);
+                MessageBox.Show("Greška pri povezivanju sa bazom podataka!");
             }
-
-            sqlConnection.Close();
-
+            finally
+            {
+                sqlConnection.Close();
+            }
+            
         }
 
     }
